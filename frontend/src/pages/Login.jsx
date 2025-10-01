@@ -17,12 +17,9 @@ const Login = () => {
 
     try {
       const { role } = await signIn(email, password, rememberMe);
-      
-      if (role === 'doctor') {
-        navigate('/doctor-dashboard');
-      } else {
-        navigate('/patient-dashboard');
-      }
+      // After successful sign-in, send to root which will route based on role
+      // Use replace to avoid back button returning to login
+      navigate('/', { replace: true, state: { roleHint: role } });
     } catch (err) {
       setError(err.message || 'Failed to login. Please check your credentials.');
     } finally {

@@ -11,7 +11,9 @@ import pytesseract
 from pdf2image import convert_from_path
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
 
+load_dotenv()
 # Initialize Gemini client
 # IMPORTANT: Using python_gemini integration
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")

@@ -44,12 +44,8 @@ const Signup = () => {
         formData.role,
         formData.name
       );
-      
-      if (role === 'doctor') {
-        navigate('/doctor-dashboard');
-      } else {
-        navigate('/patient-dashboard');
-      }
+      // Route to root and let auth/role decide; replace to avoid back to signup
+      navigate('/', { replace: true, state: { roleHint: role } });
     } catch (err) {
       setError(err.message || 'Failed to create account. Please try again.');
     } finally {

@@ -4,7 +4,8 @@ import { useAuth } from '../utils/AuthContext';
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { currentUser, userRole, loading } = useAuth();
 
-  if (loading) {
+  // Wait until auth finishes and role is known when user exists
+  if (loading || (currentUser && !userRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
