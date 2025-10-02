@@ -17,9 +17,11 @@ load_dotenv()
 # Initialize Gemini client
 # IMPORTANT: Using python_gemini integration
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY environment variable is required but not set")
-client = genai.Client(api_key=GEMINI_API_KEY)
+client = None
+if GEMINI_API_KEY:
+    client = genai.Client(api_key=GEMINI_API_KEY)
+else:
+    print("⚠️  Warning: GEMINI_API_KEY not set. AI analysis will not be available.")
 
 
 def extract_text_from_image(image_path: str) -> str:
@@ -86,6 +88,9 @@ def analyze_medical_text_with_ai(extracted_text: str) -> str:
         Exception: If AI analysis fails
     """
     try:
+        if not client:
+            return "⚠️ AI analysis is not available. GEMINI_API_KEY is not configured. Please set up the API key to enable AI-powered medical report analysis."
+        
         if not extracted_text or len(extracted_text.strip()) < 10:
             return "Unable to analyze: insufficient text extracted from the document."
         
