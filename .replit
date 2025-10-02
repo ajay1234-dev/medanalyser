@@ -1,11 +1,11 @@
-modules = ["python-3.11", "nodejs-20"]
+modules = ["nodejs-20", "python-3.11", "web"]
 [agent]
 expertMode = true
 integrations = ["python_gemini:1.0.0"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["freetype", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "poppler", "poppler_utils", "tcl", "tesseract", "tk", "zlib"]
+packages = ["freetype", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "openssl", "poppler", "poppler_utils", "postgresql", "tcl", "tesseract", "tk", "zlib"]
 
 [workflows]
 runButton = "Project"
@@ -58,3 +58,7 @@ externalPort = 8000
 [[ports]]
 localPort = 38229
 externalPort = 80
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
