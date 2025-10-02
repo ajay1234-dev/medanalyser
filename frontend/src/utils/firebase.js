@@ -7,7 +7,9 @@ import {
   onAuthStateChanged,
   setPersistence,
   browserLocalPersistence,
-  browserSessionPersistence
+  browserSessionPersistence,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth';
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
@@ -60,6 +62,12 @@ function mapFirebaseAuthError(error) {
       return 'Incorrect email or password.';
     case 'auth/network-request-failed':
       return 'Network error. Please check your connection and try again.';
+    case 'auth/popup-closed-by-user':
+      return 'Sign-in was cancelled. Please try again.';
+    case 'auth/popup-blocked':
+      return 'Pop-up was blocked by your browser. Please allow pop-ups and try again.';
+    case 'auth/account-exists-with-different-credential':
+      return 'An account already exists with this email using a different sign-in method.';
     default:
       return error?.message || 'Authentication failed. Please try again.';
   }
@@ -109,6 +117,60 @@ export const logout = async () => {
     await signOut(auth);
   } catch (error) {
     throw error;
+  }
+};
+
+export const signInWithGoogle = async (rememberMe = false) => {
+  try {
+    await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (!userDoc.exists()) {
+      throw new Error('ROLE_REQUIRED');
+    }
+    
+    const role = userDoc.data().role;
+    return { user, role };
+  } catch (error) {
+    if (error.message === 'ROLE_REQUIRED') {
+      throw error;
+    }
+    const message = mapFirebaseAuthError(error);
+    const err = new Error(message);
+    err.code = error?.code;
+    throw err;
+  }
+};
+
+export const signUpWithGoogle = async (role, rememberMe = false) => {
+  try {
+    await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists()) {
+      const existingRole = userDoc.data().role;
+      return { user, role: existingRole };
+    }
+    
+    await setDoc(doc(db, 'users', user.uid), {
+      email: user.email,
+      role,
+      name: user.displayName || user.email.split('@')[0],
+      createdAt: new Date().toISOString()
+    });
+    
+    return { user, role };
+  } catch (error) {
+    const message = mapFirebaseAuthError(error);
+    const err = new Error(message);
+    err.code = error?.code;
+    throw err;
   }
 };
 
