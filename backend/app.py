@@ -447,7 +447,7 @@ def internal_error(e):
 
 if __name__ == '__main__':
     # Run Flask app
-    # Bind to 0.0.0.0:8000 for backend API (port 5000 reserved for frontend)
+    # Bind to localhost:8000 for backend API (port 5000 reserved for frontend)
     port = int(os.environ.get('PORT', 8000))
     debug_mode = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 't')
-    app.run(host='0.0.0.0', port=port, debug=debug_mode)
+    app.run(host='127.0.0.1', port=port, debug=debug_mode)
