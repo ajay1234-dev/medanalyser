@@ -6,6 +6,16 @@ This is a full-stack AI-powered healthcare platform that enables patients to upl
 
 ## Recent Changes (October 2, 2025)
 
+### Google Authentication Integration
+- **Google Sign-In/Sign-Up Added**: Users can now authenticate using their Google accounts
+  - Login page includes "Sign in with Google" button with popup authentication
+  - Signup page includes "Sign up with Google" with role selection (patient/doctor)
+  - Seamless integration with existing Firebase Authentication system
+  - Smart error handling for Google-specific auth errors (popup blocked, popup closed, etc.)
+  - Role validation ensures users sign up before logging in with Google
+  - Remember Me functionality works with Google authentication
+- **Firebase Configuration**: Google provider must be enabled in Firebase Authentication settings
+
 ### UI/UX Enhancement Update
 - **Comprehensive UI Overhaul**: Completely redesigned all pages and dashboards with modern medical-themed aesthetics
 - **Navigation Enhancements**: Added sticky navigation bars with backdrop blur effects, gradient medical icons, and better user info display
@@ -52,7 +62,9 @@ This is a full-stack AI-powered healthcare platform that enables patients to upl
 
 ### Firebase Setup Steps:
 1. Create a Firebase project at https://console.firebase.google.com
-2. Enable Email/Password authentication in Firebase Auth
+2. Enable authentication providers in Firebase Auth:
+   - Email/Password authentication
+   - Google authentication (required for Google Sign-In feature)
 3. Create a Firestore database
 4. Create a Storage bucket
 5. Generate a service account key (Settings > Service Accounts > Generate New Private Key)
@@ -109,9 +121,14 @@ Preferred communication style: Simple, everyday language.
   - Client-side: Firebase JS SDK v10 with React integration
   - Server-side: Firebase Admin SDK with token verification and revocation checking
   - Remember Me: Browser localStorage vs sessionStorage persistence
+  - **Authentication Methods**:
+    - Email/Password authentication with password validation
+    - Google Sign-In with popup-based OAuth flow
+    - Role selection during signup (patient or doctor)
 - **Role-Based Access**: Separate dashboards and permissions for patient vs doctor roles
   - Protected routes redirect based on user role
   - Firestore stores user role in /users/{uid}/role field
+  - Google authentication respects role selection from signup
 - **Token-Based Security**: Authorization headers for API requests
   - Automatic token refresh via Firebase
   - Axios interceptors attach tokens to all backend requests
