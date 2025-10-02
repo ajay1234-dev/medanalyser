@@ -4,15 +4,51 @@
 
 This is a full-stack AI-powered healthcare platform that enables patients to upload and analyze medical reports and prescriptions, while allowing doctors to review patient data and provide consultations. The system uses OCR to extract text from documents, AI (Google Gemini) to analyze and interpret medical data, and provides health tracking, visualizations, and reminder functionality. The platform bridges the gap between complex medical reports and patient understanding through automated analysis and simple explanations.
 
-## Recent Changes (September 30, 2025)
+## Recent Changes (October 2, 2025)
 
-- **Frontend Implementation Complete**: React + Vite application with full authentication and dashboards
-- **Backend Implementation Complete**: Fully functional Flask REST API with OCR and AI analysis
-- **Security Enhancements**: Firebase Authentication enforced on all endpoints with token revocation checking
-- **Storage Optimization**: Blob paths stored in Firestore with on-demand signed URL generation (15-minute expiration)
-- **Production-Ready Configuration**: Debug mode controlled by environment variable, configurable CORS
-- **API Endpoints Deployed**: POST /upload, GET /reports/<user_id>, GET /report/<report_id> running on port 8000
-- **Frontend Running**: Port 5000 with login, signup, patient dashboard, doctor dashboard, and role-based routing
+- **Replit Environment Setup Complete**: Successfully configured for Replit development environment
+- **System Dependencies Installed**: Poppler (PDF processing), Tesseract OCR, Node.js 20
+- **Frontend Configuration**: Vite configured with proper HMR settings for Replit proxy (host: 0.0.0.0:5000)
+- **Backend Configuration**: Flask server running on localhost:8000 with graceful API key handling
+- **Workflows Configured**: Frontend workflow (port 5000, webview) and Backend workflow (port 8000, console)
+- **Deployment Ready**: VM deployment configured with start.sh script for both frontend and backend
+- **API Key Handling**: Backend gracefully handles missing GEMINI_API_KEY and Firebase credentials with helpful error messages
+- **Duplicate Directory Cleanup**: Removed redundant MediMindAI folder structure
+
+## Setup Requirements
+
+⚠️ **IMPORTANT**: This application requires external API credentials to function:
+
+### Required Environment Variables
+
+**Backend (Create `backend/.env` file):**
+- `GEMINI_API_KEY` - Get from https://aistudio.google.com/app/apikey
+- `FIREBASE_PROJECT_ID` - From Firebase Console
+- `FIREBASE_CLIENT_EMAIL` - From Firebase Service Account
+- `FIREBASE_PRIVATE_KEY` - From Firebase Service Account (download JSON key)
+
+**Frontend (Create `frontend/.env` file):**
+- `VITE_FIREBASE_API_KEY` - From Firebase Console > Project Settings
+- `VITE_FIREBASE_AUTH_DOMAIN` - Usually `{project-id}.firebaseapp.com`
+- `VITE_FIREBASE_PROJECT_ID` - Your Firebase project ID
+- `VITE_FIREBASE_STORAGE_BUCKET` - Usually `{project-id}.appspot.com`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID` - From Firebase Console
+- `VITE_FIREBASE_APP_ID` - From Firebase Console
+- `VITE_BACKEND_URL` - Currently set to Replit domain with port 8000
+
+### Firebase Setup Steps:
+1. Create a Firebase project at https://console.firebase.google.com
+2. Enable Email/Password authentication in Firebase Auth
+3. Create a Firestore database
+4. Create a Storage bucket
+5. Generate a service account key (Settings > Service Accounts > Generate New Private Key)
+6. Add the credentials to the respective .env files
+
+### Current Status:
+- ✅ Development server running (frontend may show blank until Firebase is configured)
+- ✅ Backend API operational (gracefully handles missing credentials)
+- ✅ OCR and file processing ready (Tesseract and Poppler installed)
+- ⚠️ Authentication and AI features require API keys to be configured
 
 ## User Preferences
 
